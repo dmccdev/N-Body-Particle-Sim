@@ -6,11 +6,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # --------------------------------------------------
-# Raylib
-# Download and build Raylib automatically
+# Dependencies
 # --------------------------------------------------
 
 include(FetchContent)
+
+# --------------------------------------------------
+# Raylib
+# --------------------------------------------------
 
 FetchContent_Declare(
     raylib
@@ -19,6 +22,19 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(raylib)
+
+# --------------------------------------------------
+# Eigen
+# --------------------------------------------------
+
+FetchContent_Declare(
+    Eigen3
+    GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
+    GIT_TAG 3.4.0
+    GIT_SHALLOW TRUE
+)
+
+FetchContent_MakeAvailable(Eigen3)
 
 # --------------------------------------------------
 # Executable
@@ -37,7 +53,7 @@ add_executable(particlesim
     # Statistics
     src/statistics/statistics.cpp
     src/statistics/statistics.hpp
-    
+
     # Pairwise algorithm
     src/pairwise_algorithm/pairwise.hpp
     src/pairwise_algorithm/pairwise.cpp
@@ -72,12 +88,14 @@ target_include_directories(particlesim PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-
 # --------------------------------------------------
-# Raylib
+# Link libraries
 # --------------------------------------------------
 
-target_link_libraries(particlesim PRIVATE raylib)
+target_link_libraries(particlesim PRIVATE
+    raylib
+    Eigen3::Eigen
+)
 
 # --------------------------------------------------
 # OpenMP
