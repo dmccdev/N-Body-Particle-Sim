@@ -12,7 +12,7 @@
   <img src="https://img.shields.io/badge/C%2B%2B-17-blue">
   <img src="https://img.shields.io/badge/Raylib-5.5-green">
   <img src="https://img.shields.io/badge/CMake-3.20%2B-orange">
-  <img src="https://img.shields.io/badge/OpenMP-Optional-red">
+  <img src="https://img.shields.io/badge/OpenMP-red">
 </p>
 
 ---
@@ -152,11 +152,6 @@ This allows the simulation to demonstrate how both the choice of force algorithm
 # Parallel Computation
 
 OpenMP is used to parallelise suitable particle calculations.
-
-Where OpenMP is available, independent particle calculations can be distributed across multiple CPU threads.
-
-OpenMP is optional, so the simulation can still be built and run without it.
-
 Also the project uses Eigen (A third party linear algebra module) which allows for particle calculations with vectors.
 
 ---
@@ -248,7 +243,7 @@ particlesim/
 - C++17 compatible compiler
 - CMake 3.20 or newer
 - Git
-- OpenMP (optional)
+- OpenMP
 
 Raylib is downloaded and configured automatically by CMake.
 
@@ -313,7 +308,7 @@ The integrator also affects the amount of work performed per timestep:
 - Verlet has relatively low computational overhead.
 - RK4 requires four force evaluations.
 
-OpenMP can further reduce computation time by distributing independent particle calculations using threading.
+OpenMP can further reduce computation time through threading
 
 The project therefore provides several combinations of algorithms that can be compared under the matching simulation conditions.
 

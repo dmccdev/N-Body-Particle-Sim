@@ -23,9 +23,7 @@ void Statistics::calculateStatistics(ParticlesState &particles)
 
     //Calculate Linear Momentum & Total Kinetic Energy
 
-    #ifdef USE_OPENMP
     #pragma omp parallel for reduction(+:linearMomentumX,linearMomentumY,angularMomentum,totalKineticEnergy)
-    #endif
 
     for(int i = 0; i < particles.particlesCount; i++)
     {
@@ -105,9 +103,7 @@ void Statistics::calculateInitialStatistics()
     int numberOfParticles = initialMass.size();
 
     //Calculating Inital Linear Momentum and Initial Total Kinetic Energy
-    #ifdef USE_OPENMP
     #pragma omp parallel for reduction(+:initialLinearMomentumX,initialLinearMomentumY,initialAngularMomentum,initialTotalKineticEnergy)
-    #endif
 
     for(int i = 0; i < numberOfParticles; i++)
     {

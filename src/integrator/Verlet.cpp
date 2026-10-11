@@ -6,7 +6,6 @@
 void Verlet::Initiate(ParticlesState &particles)
 
 {
-    // CalculateAccelerations(particles.X, particles.Y, particles.accelerationX, particles.accelerationY, particles.mass);
     nextAccelerationX = particles.accelerationX;
     nextAccelerationY = particles.accelerationY;
 }
@@ -19,8 +18,6 @@ void Verlet::Update(ParticlesState &particles, double dt)
 
     particles.X = particles.X + particles.velocityX*dt + dt*dt *0.5*particles.accelerationX;
     particles.Y = particles.Y + particles.velocityY*dt + dt*dt *0.5*particles.accelerationY;
-
-    // CalculateAccelerations(particles.X, particles.Y, nextAccelerationX, nextAccelerationY, particles.mass);
 
     particles.velocityX = particles.velocityX + 0.5 * (particles.accelerationX + nextAccelerationX)*dt;
     particles.velocityY = particles.velocityY + 0.5 * (particles.accelerationY + nextAccelerationY)*dt;   

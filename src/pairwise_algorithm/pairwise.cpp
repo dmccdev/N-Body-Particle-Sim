@@ -53,17 +53,15 @@ void Pairwise::Update(bool statisticsEnabled)
     {
         frameCounter++;
     }
-    else
-    {
-        frameCounter = 0;
-    }
 
     switch(integratorNumber)
     {
     case 1: //Euler
 
         CalculateAccelerations(particles.X, particles.Y, particles.accelerationX, particles.accelerationY, particles.mass);
+
         EulerIntegrator.Update(particles, dt);
+
         particles.Draw();
         break;
 
@@ -71,11 +69,15 @@ void Pairwise::Update(bool statisticsEnabled)
 
         particles.accelerationX = VerletIntegrator.nextAccelerationX;
         particles.accelerationY = VerletIntegrator.nextAccelerationY;
+
         particles.X = particles.X + particles.velocityX*dt + dt*dt *0.5*particles.accelerationX;
         particles.Y = particles.Y + particles.velocityY*dt + dt*dt *0.5*particles.accelerationY;
+
         CalculateAccelerations(particles.X, particles.Y, VerletIntegrator.nextAccelerationX, VerletIntegrator.nextAccelerationY, particles.mass);
+
         particles.velocityX = particles.velocityX + 0.5 * (particles.accelerationX + VerletIntegrator.nextAccelerationX)*dt;
-        particles.velocityY = particles.velocityY + 0.5 * (particles.accelerationY + VerletIntegrator.nextAccelerationY)*dt;   
+        particles.velocityY = particles.velocityY + 0.5 * (particles.accelerationY + VerletIntegrator.nextAccelerationY)*dt; 
+
         particles.Draw();
         break;
 
@@ -129,9 +131,7 @@ void Pairwise::CalculateAccelerations(Vec &positionX, Vec &positionY, Vec &accel
     accelerationX.setZero();
     accelerationY.setZero();
 
-    #ifdef USE_OPENMP
     #pragma omp parallel for
-    #endif
 
     for(int i = 0;  i < numberOfParticles; i++)
     {

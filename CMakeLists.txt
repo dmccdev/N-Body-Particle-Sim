@@ -4,90 +4,93 @@ project(particlesim LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Dependencies
 include(FetchContent)
 
-set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
-set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-set(BUILD_GAMES OFF CACHE BOOL "" FORCE)
-
+# Raylib
 FetchContent_Declare(
     raylib
     GIT_REPOSITORY https://github.com/raysan5/raylib.git
     GIT_TAG 5.5
-    GIT_SHALLOW TRUE
 )
 
+FetchContent_MakeAvailable(raylib)
+
+# Eigen
 FetchContent_Declare(
-    eigen
+    Eigen3
     GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
     GIT_TAG 3.4.0
     GIT_SHALLOW TRUE
 )
 
-FetchContent_MakeAvailable(raylib)
+FetchContent_GetProperties(Eigen3)
 
-FetchContent_GetProperties(eigen)
-
-if(NOT eigen_POPULATED)
-    FetchContent_Populate(eigen)
+if(NOT eigen3_POPULATED)
+    FetchContent_Populate(Eigen3)
 endif()
 
-add_library(eigen_headers INTERFACE)
-add_library(Eigen3::Eigen ALIAS eigen_headers)
+add_library(Eigen3::Eigen INTERFACE IMPORTED GLOBAL)
 
-target_include_directories(eigen_headers SYSTEM INTERFACE
-    "${eigen_SOURCE_DIR}"
+set_target_properties(Eigen3::Eigen PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${eigen3_SOURCE_DIR}"
 )
 
+# OpenMP (required)
+find_package(OpenMP REQUIRED)
+
+# Executable
 add_executable(particlesim
     src/main.cpp
-    src/userinterface/ui.cpp
+
+    # User interface
     src/userinterface/ui.hpp
+    src/userinterface/ui.cpp
     src/userinterface/button.cpp
     src/userinterface/button.hpp
+
+    # Statistics
     src/statistics/statistics.cpp
     src/statistics/statistics.hpp
-    src/particlestate/ParticlesState.cpp
-    src/particlestate/ParticlesState.hpp
-    src/pairwise_algorithm/pairwise.cpp
+
+    # Pairwise algorithm
     src/pairwise_algorithm/pairwise.hpp
-    src/barneshut_algorithm/barneshut.cpp
+    src/pairwise_algorithm/pairwise.cpp
+
+    # Particle state
+    src/particlestate/ParticlesState.hpp
+    src/particlestate/ParticlesState.cpp
+
+    # Barnes-Hut algorithm
     src/barneshut_algorithm/barneshut.hpp
-    src/barneshut_algorithm/node.cpp
+    src/barneshut_algorithm/barneshut.cpp
     src/barneshut_algorithm/node.hpp
+    src/barneshut_algorithm/node.cpp
     src/barneshut_algorithm/quadtree.cpp
     src/barneshut_algorithm/quadtree.hpp
-    src/integrator/Euler.cpp
-    src/integrator/Euler.hpp
+
+    # Integrators
     src/integrator/Verlet.cpp
     src/integrator/Verlet.hpp
     src/integrator/RK4.cpp
     src/integrator/RK4.hpp
+    src/integrator/Euler.cpp
+    src/integrator/Euler.hpp
 )
 
+# Include directories
 target_include_directories(particlesim PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/src"
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+# Link libraries
 target_link_libraries(particlesim PRIVATE
     raylib
     Eigen3::Eigen
+    OpenMP::OpenMP_CXX
 )
 
-find_package(OpenMP QUIET COMPONENTS CXX)
-
-if(OpenMP_CXX_FOUND)
-    target_link_libraries(particlesim PRIVATE OpenMP::OpenMP_CXX)
-    target_compile_definitions(particlesim PRIVATE USE_OPENMP)
-endif()
-
-add_custom_command(TARGET particlesim POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E make_directory
-        "$<TARGET_FILE_DIR:particlesim>/assets"
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/assets"
-        "$<TARGET_FILE_DIR:particlesim>/assets"
-    VERBATIM
-)
+# OpenMP compile definitions
+target_compile_definitions(particlesim PRIVATE USE_OPENMP)

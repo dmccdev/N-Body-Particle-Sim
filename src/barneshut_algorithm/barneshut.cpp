@@ -50,9 +50,7 @@ void BarnesHut::calculateAccelerations(Vec &positionX, Vec &positionY, Vec &acce
     accelerationY.setZero();
 
     quadtree.buildTree(particles, 450, 450);
-    #ifdef USE_OPENMP
     #pragma omp parallel for
-    #endif
     for(int particleIndex = 0; particleIndex < particleCount; particleIndex++)
     {
         calculateAcceleration(0, particleIndex, positionX, positionY, accelerationX, accelerationY, mass);
