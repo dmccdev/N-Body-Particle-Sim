@@ -28,10 +28,6 @@ add_executable(particlesim
 
     src/main.cpp
 
-    #Font File
-    src/assets/calibri.ttf
-    src/assets/inter.ttf
-
     # User interface
     src/userinterface/ui.hpp
     src/userinterface/ui.cpp
@@ -76,14 +72,6 @@ target_include_directories(particlesim PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-# --------------------------------------------------
-# Copy font to build directory
-# --------------------------------------------------
-
-file(
-    COPY "${CMAKE_CURRENT_SOURCE_DIR}/src/assets/inter.ttf"
-    DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/src"
-)
 
 # --------------------------------------------------
 # Raylib
