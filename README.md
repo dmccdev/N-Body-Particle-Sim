@@ -186,8 +186,6 @@ particlesim/
 │   ├── main.cpp
 │   │
 │   ├── assets/
-│   │   ├── calibri.ttf
-│   │   ├── inter.ttf
 │   │   ├── Galaxy.png
 │   │   ├── BinaryStarSystem.png
 │   │   ├── StarSystem.png
