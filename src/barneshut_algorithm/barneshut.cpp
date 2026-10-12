@@ -180,7 +180,6 @@ void BarnesHut::calculateAcceleration(int nodeIndex, int particleIndex, Vec &pos
             return;  
         }
 
-        // double distance = sqrt(distanceSquared);
         double ratio = (4*quadtree.nodes[nodeIndex].halfWidth*quadtree.nodes[nodeIndex].halfWidth)/distanceSquared;
 
 

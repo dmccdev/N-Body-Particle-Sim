@@ -59,7 +59,6 @@ void Statistics::calculateStatistics(ParticlesState &particles)
     energyError = std::abs((totalEnergy - initialTotalEnergy) / initialTotalEnergy) * 100;
     linearMomentumErrorX = std::abs((linearMomentumX - initialLinearMomentumX) / initialLinearMomentumX) * 100;
     linearMomentumErrorY = std::abs((linearMomentumY - initialLinearMomentumY) / initialLinearMomentumY) * 100;
-    // angularMomentumError = std::abs(angularMomentum - initialAngularMomentum);
 }
 
 void Statistics::updateStatistics(ParticlesState &particles, int &frameCounter)

@@ -189,12 +189,11 @@ void ParticlesState::Galaxy()
     velocityX[0] = 0.0;
     velocityY[0] = 0.0;
 
-    //2D Random Polar Co ordiantes
-    // std::uniform_real_distribution<double> distributionRadius(35.0, 320.0); 
-    std::uniform_real_distribution<double> distributionRadius(150.0, 300.0); 
+    //2D Random Polar Co ordiantes 
+    std::uniform_real_distribution<double> distributionRadius(175.0, 300.0); 
 
     std::uniform_real_distribution<double> distributionTheta(0.0, 2.0 * pi);
-    std::normal_distribution<double> diskThickness(0.0, 12.0);
+    std::normal_distribution<double> diskThickness(0.0, 12.00);
     std::uniform_real_distribution<double> velocityVariation(0.95, 1.05);
 
     for (int i = 1; i < particlesCount; i++)
