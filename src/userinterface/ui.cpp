@@ -24,7 +24,7 @@ UserInterface::UserInterface(Font font, double dt, double G) :
 {
 }
 
-void UserInterface::Draw()
+void UserInterface::Draw() const
 {
     BarnesHutButton.Draw();
     PairwiseButton.Draw();
@@ -174,15 +174,15 @@ void UserInterface::SimulationBegin()
     }
 }
 
-void UserInterface::DrawStatistics(Statistics &Stats)
+void UserInterface::DrawStatistics(const Statistics &Stats) const
 {
-    int panelX = 900;
-    int panelWidth = 300;
-    int panelHeight = 900;
+    const int panelX = 900;
+    const int panelWidth = 300;
+    const int panelHeight = 900;
 
-    Color backgroundColour = { 45, 45, 48, 255 }; 
-    Color lineColour = { 100, 100, 105, 255 };
-    Color textColour = { 210, 210, 215, 255 };
+    const Color backgroundColour = { 45, 45, 48, 255 };
+    const Color lineColour = { 100, 100, 105, 255 };
+    const Color textColour = { 210, 210, 215, 255 };
 
     DrawRectangle(panelX, 0, panelWidth, panelHeight, backgroundColour);
 

@@ -15,14 +15,14 @@ Kv4X(numberOfParticles), Kv4Y(numberOfParticles), Kr4X(numberOfParticles), Kr4Y(
 
 }
 
-void RK4::UpdateVirtualPosition(ParticlesState &particles, Vec &particleSlopeX, Vec &particleSlopeY, double dt) //Private
+void RK4::UpdateVirtualPosition(const ParticlesState &particles, const Vec &particleSlopeX, const Vec &particleSlopeY, double dt) //Private
 
 {
     virtualX = particles.X + dt * particleSlopeX;
     virtualY = particles.Y + dt * particleSlopeY;
 }
 
-void RK4::CalculateSlopes(ParticlesState &particles, double dt) //Private
+void RK4::CalculateSlopes(const ParticlesState &particles, double dt) //Private
 
 {
     //K1

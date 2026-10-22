@@ -16,17 +16,17 @@ public:
     Vec mass;
     Vec speedSquared;
 
-    int particlesCount;
-    double G = 1.0;
-    double pi = 3.14159265358979323846;
+    const int particlesCount;
+    static constexpr double G = 1.0;
+    static constexpr double pi = 3.14159265358979323846;
     ParticlesState(int particlesCount);
     ~ParticlesState();
-    void PrintData();
+    void PrintData() const;
     void BinaryStar();
     void SingleStar();
     void Galaxy();
     void Draw();
 private:
-    Color GetParticleColor(double speedSquared, double maxSpeedSquared);
+    Color GetParticleColor(double speedSquared, double maxSpeedSquared) const;
     Texture2D particleTexture{};
 };

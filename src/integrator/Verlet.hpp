@@ -11,7 +11,7 @@ class Verlet
 public:
     Vec nextAccelerationX;
     Vec nextAccelerationY;
-    void Initiate(ParticlesState &particles);
+    void Initiate(const ParticlesState &particles);
     void Update(ParticlesState &particles, double dt);
 
 };

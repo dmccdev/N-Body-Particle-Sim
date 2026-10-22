@@ -6,7 +6,7 @@
 class UserInterface
 {
 public:
-    Font font;
+    const Font font;
     Button BarnesHutButton;
     Button PairwiseButton;
 
@@ -23,7 +23,7 @@ public:
 
     UserInterface(Font font, double dt, double G);
 
-    void Draw();
+    void Draw() const;
     void UpdateButtons(Vector2 mousePosition);
     void ButtonPressed(Vector2 mousePosition, Button &button);
 
@@ -34,7 +34,7 @@ public:
     void SetActiveAlgorithm(Button &button);
     void SimulationBegin();
 
-    void DrawStatistics(Statistics &Stats);
+    void DrawStatistics(const Statistics &Stats) const;
 
 private:
 };

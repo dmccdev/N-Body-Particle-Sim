@@ -3,15 +3,22 @@
 #include <cmath>
 
 Statistics::Statistics(double dt, double G, double frameCalculationInterval, double epsilon)
+    : frameCalculationInterval(frameCalculationInterval),
+      dt(dt),
+      G(G),
+      epsilon(epsilon),
+      epsilonSquared(epsilon*epsilon)
 {
-    this->dt = dt;
-    this->G = G;
-    this->frameCalculationInterval = frameCalculationInterval;
-    this->epsilon = epsilon;
-    this->epsilonSquared = epsilon*epsilon;
+    linearMomentumX = 0.0;
+    linearMomentumY = 0.0;
+    totalEnergy = 0.0;
+    totalKineticEnergy = 0.0;
+    totalPotentialEnergy = 0.0;
+    energyError = 0;
+    
 }
 
-void Statistics::calculateStatistics(ParticlesState &particles)
+void Statistics::calculateStatistics(const ParticlesState &particles)
 {
     //Reset Statistics
     linearMomentumX = 0.0;
@@ -41,10 +48,10 @@ void Statistics::calculateStatistics(ParticlesState &particles)
     {
         for(int j = i + 1; j < particles.particlesCount; j++)
         {   
-            double displacementX = particles.X[j] - particles.X[i];
-            double displacementY = particles.Y[j] - particles.Y[i];
+            const double displacementX = particles.X[j] - particles.X[i];
+            const double displacementY = particles.Y[j] - particles.Y[i];
 
-            double distanceSquared = displacementX*displacementX + displacementY*displacementY;
+            const double distanceSquared = displacementX*displacementX + displacementY*displacementY;
             if(distanceSquared > 0.0)
             {
                 totalPotentialEnergy -= G * particles.mass[i] * particles.mass[j] / std::sqrt(distanceSquared + epsilonSquared);
@@ -61,7 +68,7 @@ void Statistics::calculateStatistics(ParticlesState &particles)
     linearMomentumErrorY = std::abs((linearMomentumY - initialLinearMomentumY) / initialLinearMomentumY) * 100;
 }
 
-void Statistics::updateStatistics(ParticlesState &particles, int &frameCounter)
+void Statistics::updateStatistics(const ParticlesState &particles, int &frameCounter)
 {
     if (!initialStatisticsCalculated && initialStateCaptured)
     {
@@ -75,7 +82,7 @@ void Statistics::updateStatistics(ParticlesState &particles, int &frameCounter)
     }
 }
 
-void Statistics::getInitialParticleState(ParticlesState &particles)
+void Statistics::getInitialParticleState(const ParticlesState &particles)
 {
     initialPositionX = particles.X;
     initialPositionY = particles.Y;
@@ -99,7 +106,7 @@ void Statistics::calculateInitialStatistics()
     linearMomentumErrorX = 0.0;
     linearMomentumErrorY = 0.0;   
 
-    int numberOfParticles = initialMass.size();
+    const int numberOfParticles = initialMass.size();
 
     //Calculating Inital Linear Momentum and Initial Total Kinetic Energy
     #pragma omp parallel for reduction(+:initialLinearMomentumX,initialLinearMomentumY,initialAngularMomentum,initialTotalKineticEnergy)
@@ -118,10 +125,10 @@ void Statistics::calculateInitialStatistics()
     {
         for(int j = i + 1; j < numberOfParticles; j++)
         {   
-            double displacementX = initialPositionX[j] - initialPositionX[i];
-            double displacementY = initialPositionY[j] - initialPositionY[i];
+            const double displacementX = initialPositionX[j] - initialPositionX[i];
+            const double displacementY = initialPositionY[j] - initialPositionY[i];
 
-            double distanceSquared = displacementX*displacementX + displacementY*displacementY;
+            const double distanceSquared = displacementX*displacementX + displacementY*displacementY;
             if(distanceSquared > 0)
             {
                 initialTotalPotentialEnergy -= G * initialMass[i] * initialMass[j] / std::sqrt(distanceSquared + epsilonSquared); 

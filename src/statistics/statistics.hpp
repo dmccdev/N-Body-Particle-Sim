@@ -8,12 +8,12 @@ class Statistics
 {
 public:
 int frame_rate;
-double frameCalculationInterval;
+const double frameCalculationInterval;
 
-double dt;
-double G;
-double epsilon;
-double epsilonSquared;
+const double dt;
+const double G;
+const double epsilon;
+const double epsilonSquared;
 
 double totalEnergy;
 double energyError;
@@ -42,9 +42,9 @@ double initialAngularMomentum;
 
 Statistics(double dt, double G, double frameCalculationInterval, double epsilon);
 
-void calculateStatistics(ParticlesState &particles);
-void updateStatistics(ParticlesState &particles, int &frameCounter);
-void getInitialParticleState(ParticlesState &particles);
+void calculateStatistics(const ParticlesState &particles);
+void updateStatistics(const ParticlesState &particles, int &frameCounter);
+void getInitialParticleState(const ParticlesState &particles);
 
 private:
 Vec initialPositionX;

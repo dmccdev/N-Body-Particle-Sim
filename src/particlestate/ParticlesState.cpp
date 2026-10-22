@@ -18,18 +18,18 @@ mass(particlesCount), speedSquared(particlesCount),
 particlesCount(particlesCount)
 
 {
-    int textureSize = 32;
+    const int textureSize = 32;
     Image glowImage = GenImageColor(textureSize, textureSize, BLANK);
-    Color *pixels = static_cast<Color *>(glowImage.data);
+    Color * const pixels = static_cast<Color *>(glowImage.data);
 
     for (int y = 0; y < textureSize; ++y)
     {
         for (int x = 0; x < textureSize; ++x)
         {
-            float dx = (x + 0.5f - textureSize * 0.5f) / (textureSize * 0.5f);
-            float dy = (y + 0.5f - textureSize * 0.5f) / (textureSize * 0.5f);
-            float radiusSquared = dx * dx + dy * dy;
-            unsigned char alpha = static_cast<unsigned char>(255.0f * std::exp(-5.0f * radiusSquared));
+            const float dx = (x + 0.5f - textureSize * 0.5f) / (textureSize * 0.5f);
+            const float dy = (y + 0.5f - textureSize * 0.5f) / (textureSize * 0.5f);
+            const float radiusSquared = dx * dx + dy * dy;
+            const unsigned char alpha = static_cast<unsigned char>(255.0f * std::exp(-5.0f * radiusSquared));
             pixels[y * textureSize + x] = Color{255, 255, 255, alpha};
         }
     }
@@ -47,7 +47,7 @@ ParticlesState::~ParticlesState()
     }
 }
 
-void ParticlesState::PrintData()// Debug
+void ParticlesState::PrintData() const // Debug
 
 {
     std::cout << "Acceleration: " << '\n';  
@@ -85,23 +85,23 @@ void ParticlesState::SingleStar()
     for(int i = 1; i < particlesCount; i++)
     {
         //Position
-        double radius = distributionRadius(generator64);
-        double theta = distributionTheta(generator64);
-        double randomSpeedPerturbation = distributionPerturbation(generator64);
+        const double radius = distributionRadius(generator64);
+        const double theta = distributionTheta(generator64);
+        const double randomSpeedPerturbation = distributionPerturbation(generator64);
 
 
         X[i] = X[0] + radius * std::cos(theta);
         Y[i] = Y[0] + radius * std::sin(theta);
 
         //Velocity
-        double displacementX = X[i] - X[0];
-        double displacementY = Y[i] - Y[0];
+        const double displacementX = X[i] - X[0];
+        const double displacementY = Y[i] - Y[0];
 
-        double distance = std::sqrt(displacementX*displacementX + displacementY*displacementY);
-        double speed = std::sqrt(G * mass[0] / distance);
+        const double distance = std::sqrt(displacementX*displacementX + displacementY*displacementY);
+        const double speed = std::sqrt(G * mass[0] / distance);
 
-        double tangentialVelocityX = -displacementY/distance * speed;
-        double tangentialVelocityY = displacementX/distance * speed + randomSpeedPerturbation;
+        const double tangentialVelocityX = -displacementY/distance * speed;
+        const double tangentialVelocityY = displacementX/distance * speed + randomSpeedPerturbation;
 
         velocityX[i] = tangentialVelocityX;
         velocityY[i] = tangentialVelocityY;
@@ -130,14 +130,14 @@ void ParticlesState::BinaryStar()
     Y[1] = 450.0;
     mass[1] = 10000000.0;
 
-    double centerMassX = (X[0] + X[1])/2;
-    double centerMassY = (Y[0] + Y[1])/2;
-    double centerMassMass = mass[0] + mass[1];
+    const double centerMassX = (X[0] + X[1])/2;
+    const double centerMassY = (Y[0] + Y[1])/2;
+    const double centerMassMass = mass[0] + mass[1];
 
     //Calculating their velocities
-    double distance = X[0] - X[1];
-    double radius = distance/2;
-    double speed = std::sqrt(G * mass[0] /( 4 * radius));
+    const double distance = X[0] - X[1];
+    const double radius = distance/2;
+    const double speed = std::sqrt(G * mass[0] /( 4 * radius));
 
     velocityX[0] = 0.0;
     velocityX[1] = 0.0;
@@ -148,22 +148,22 @@ void ParticlesState::BinaryStar()
     for(int i = 2; i < particlesCount; i++)
     {
         //Position
-        double radius = distributionRadius(generator64);
-        double theta = distributionTheta(generator64);
-        double randomSpeedPerturbation = distributionPerturbation(generator64);
+        const double radius = distributionRadius(generator64);
+        const double theta = distributionTheta(generator64);
+        const double randomSpeedPerturbation = distributionPerturbation(generator64);
 
         X[i] = centerMassX + radius * std::cos(theta);
         Y[i] = centerMassY + radius * std::sin(theta);
 
         //Velocity
-        double displacementX = X[i] - centerMassX;
-        double displacementY = Y[i] - centerMassY;
+        const double displacementX = X[i] - centerMassX;
+        const double displacementY = Y[i] - centerMassY;
 
-        double distance = std::sqrt(displacementX*displacementX + displacementY*displacementY);
-        double speed = std::sqrt(G * centerMassMass / distance);
+        const double distance = std::sqrt(displacementX*displacementX + displacementY*displacementY);
+        const double speed = std::sqrt(G * centerMassMass / distance);
 
-        double tangentialVelocityX = -displacementY/distance * speed + randomSpeedPerturbation;
-        double tangentialVelocityY = displacementX/distance * speed;
+        const double tangentialVelocityX = -displacementY/distance * speed + randomSpeedPerturbation;
+        const double tangentialVelocityY = displacementX/distance * speed;
 
         velocityX[i] = tangentialVelocityX;
         velocityY[i] = tangentialVelocityY;
@@ -178,9 +178,9 @@ void ParticlesState::Galaxy()
     std::random_device rd;
     std::mt19937 generator64(rd());
 
-    double blackHoleX = 450.0;
-    double blackHoleY = 450.0;
-    double blackHoleMass = 5000000.0;
+    const double blackHoleX = 450.0;
+    const double blackHoleY = 450.0;
+    const double blackHoleMass = 5000000.0;
 
     X[0] = blackHoleX;
     Y[0] = blackHoleY;
@@ -198,11 +198,11 @@ void ParticlesState::Galaxy()
 
     for (int i = 1; i < particlesCount; i++)
     {
-        double radius = distributionRadius(generator64);
-        double theta = distributionTheta(generator64);
+        const double radius = distributionRadius(generator64);
+        const double theta = distributionTheta(generator64);
 
         // Circular position
-        double offsetX = radius * std::cos(theta);
+        const double offsetX = radius * std::cos(theta);
         double offsetY = radius * std::sin(theta);
 
         // Make the disk thinner vertically
@@ -212,11 +212,11 @@ void ParticlesState::Galaxy()
         Y[i] = blackHoleY + offsetY + diskThickness(generator64);
 
         // Displacement from black hole
-        double displacementX = X[i] - blackHoleX;
-        double displacementY = Y[i] - blackHoleY;
+        const double displacementX = X[i] - blackHoleX;
+        const double displacementY = Y[i] - blackHoleY;
 
-        double distanceSquared = displacementX * displacementX + displacementY * displacementY;
-        double distance = std::sqrt(distanceSquared);
+        const double distanceSquared = displacementX * displacementX + displacementY * displacementY;
+        const double distance = std::sqrt(distanceSquared);
 
         // Circular orbital velocity
         double orbitalSpeed = std::sqrt(G * blackHoleMass / distance);
@@ -239,13 +239,13 @@ void ParticlesState::Draw()
         return;
 
     speedSquared = velocityX.array().square() + velocityY.array().square();
-    double maxSpeedSquared = speedSquared.maxCoeff();
+    const double maxSpeedSquared = speedSquared.maxCoeff();
 
     BeginBlendMode(BLEND_ADDITIVE);
     rlSetTexture(particleTexture.id);
     rlBegin(RL_QUADS);
 
-    auto drawGlowQuad = [](float centerX, float centerY, float halfSize, Color tint)
+    const auto drawGlowQuad = [](float centerX, float centerY, float halfSize, Color tint)
     {
         rlColor4ub(tint.r, tint.g, tint.b, tint.a);
         rlTexCoord2f(0.0f, 0.0f);
@@ -267,15 +267,15 @@ void ParticlesState::Draw()
             rlBegin(RL_QUADS);
         }
 
-        Color color = GetParticleColor(speedSquared[i], maxSpeedSquared);
-        float px = static_cast<float>(X[i]);
-        float py = static_cast<float>(Y[i]);
+        const Color color = GetParticleColor(speedSquared[i], maxSpeedSquared);
+        const float px = static_cast<float>(X[i]);
+        const float py = static_cast<float>(Y[i]);
 
         Color halo = color;
         halo.a = 155;
         drawGlowQuad(px, py, 6.0f, halo);
 
-        Color core = ColorLerp(color, WHITE, 0.68f);
+        const Color core = ColorLerp(color, WHITE, 0.68f);
         drawGlowQuad(px, py, 1.45f, core);
     }
 
@@ -285,9 +285,9 @@ void ParticlesState::Draw()
 }
 
 
-Color ParticlesState::GetParticleColor(double speedSquared,double maxSpeedSquared)
+Color ParticlesState::GetParticleColor(double speedSquared,double maxSpeedSquared) const
 {
-    Color palette[] = {
+    static const Color palette[] = {
         {45, 105, 255, 255},
         {0, 220, 255, 255},
         {75, 255, 190, 255},
@@ -302,9 +302,9 @@ Color ParticlesState::GetParticleColor(double speedSquared,double maxSpeedSquare
         return palette[0];
     }
 
-    double normalizedSpeedSquared = std::clamp(speedSquared / maxSpeedSquared, 0.0, 1.0);
-    float palettePosition = static_cast<float>(std::sqrt(normalizedSpeedSquared) * 6.0);
-    int paletteIndex = std::min(static_cast<int>(palettePosition), 5);
-    float localT = palettePosition - static_cast<float>(paletteIndex);
+    const double normalizedSpeedSquared = std::clamp(speedSquared / maxSpeedSquared, 0.0, 1.0);
+    const float palettePosition = static_cast<float>(std::sqrt(normalizedSpeedSquared) * 6.0);
+    const int paletteIndex = std::min(static_cast<int>(palettePosition), 5);
+    const float localT = palettePosition - static_cast<float>(paletteIndex);
     return ColorLerp(palette[paletteIndex], palette[paletteIndex + 1], localT);
 }

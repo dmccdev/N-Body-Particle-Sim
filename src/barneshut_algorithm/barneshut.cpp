@@ -9,7 +9,7 @@ integratorNumber(integratorNumber),
 RK4Integrator(particleCount),
 particleCount(particleCount),
 dt(dt),
-Stats(dt, G, 300, epsilon)
+Stats(dt, 1.0, 300, 0.5)
 
 {
 }
@@ -44,7 +44,7 @@ void BarnesHut::InitialiseParticles()
     }
 }
 
-void BarnesHut::calculateAccelerations(Vec &positionX, Vec &positionY, Vec &accelerationX, Vec &accelerationY, Vec &mass)
+void BarnesHut::calculateAccelerations(const Vec &positionX, const Vec &positionY, Vec &accelerationX, Vec &accelerationY, const Vec &mass)
 {
     accelerationX.setZero();
     accelerationY.setZero();
@@ -127,7 +127,7 @@ void BarnesHut::Update(bool statisticsEnabled)
 
 
 
-void BarnesHut::calculateAcceleration(int nodeIndex, int particleIndex, Vec &positionX, Vec &positionY, Vec &accelerationX, Vec &accelerationY, Vec &mass)
+void BarnesHut::calculateAcceleration(int nodeIndex, int particleIndex, const Vec &positionX, const Vec &positionY, Vec &accelerationX, Vec &accelerationY, const Vec &mass) const
 {
     //Node External
     if(quadtree.external(nodeIndex))
@@ -140,21 +140,21 @@ void BarnesHut::calculateAcceleration(int nodeIndex, int particleIndex, Vec &pos
         //Node full
         else
         {
-            int existingParticleIndex = quadtree.nodes[nodeIndex].particleIndex;
+            const int existingParticleIndex = quadtree.nodes[nodeIndex].particleIndex;
             if(existingParticleIndex == particleIndex)
             {
                 return;
             }
 
-            double displacementX = positionX[existingParticleIndex] - positionX[particleIndex]; 
-            double displacementY = positionY[existingParticleIndex] - positionY[particleIndex];
+            const double displacementX = positionX[existingParticleIndex] - positionX[particleIndex];
+            const double displacementY = positionY[existingParticleIndex] - positionY[particleIndex];
 
-            double distanceSquared = displacementX*displacementX + displacementY*displacementY;
-            double denominator =  (distanceSquared + epsilonSquared);
-            double factor = G / std::sqrt(denominator*denominator*denominator) * mass[existingParticleIndex];
+            const double distanceSquared = displacementX*displacementX + displacementY*displacementY;
+            const double denominator =  (distanceSquared + epsilonSquared);
+            const double factor = G / std::sqrt(denominator*denominator*denominator) * mass[existingParticleIndex];
 
-            double deltaAccelerationX = factor * displacementX;
-            double deltaAccelerationY = factor * displacementY;
+            const double deltaAccelerationX = factor * displacementX;
+            const double deltaAccelerationY = factor * displacementY;
 
             accelerationX[particleIndex] += deltaAccelerationX;
             accelerationY[particleIndex] += deltaAccelerationY;
@@ -165,14 +165,14 @@ void BarnesHut::calculateAcceleration(int nodeIndex, int particleIndex, Vec &pos
     //Node internal
     else
     {            
-        double displacementX = quadtree.nodes[nodeIndex].centreMassX - positionX[particleIndex]; 
-        double displacementY = quadtree.nodes[nodeIndex].centreMassY - positionY[particleIndex];
+        const double displacementX = quadtree.nodes[nodeIndex].centreMassX - positionX[particleIndex];
+        const double displacementY = quadtree.nodes[nodeIndex].centreMassY - positionY[particleIndex];
 
-        double distanceSquared = displacementX*displacementX + displacementY*displacementY; 
+        const double distanceSquared = displacementX*displacementX + displacementY*displacementY;
  
         if(distanceSquared == 0.0)
         {
-            int childIndex = quadtree.nodes[nodeIndex].childFirstIndex;
+            const int childIndex = quadtree.nodes[nodeIndex].childFirstIndex;
             calculateAcceleration(childIndex, particleIndex, positionX, positionY, accelerationX, accelerationY, mass);
             calculateAcceleration(childIndex+1, particleIndex, positionX, positionY, accelerationX, accelerationY, mass);
             calculateAcceleration(childIndex+2, particleIndex, positionX, positionY, accelerationX, accelerationY, mass);
@@ -180,16 +180,16 @@ void BarnesHut::calculateAcceleration(int nodeIndex, int particleIndex, Vec &pos
             return;  
         }
 
-        double ratio = (4*quadtree.nodes[nodeIndex].halfWidth*quadtree.nodes[nodeIndex].halfWidth)/distanceSquared;
+        const double ratio = (4*quadtree.nodes[nodeIndex].halfWidth*quadtree.nodes[nodeIndex].halfWidth)/distanceSquared;
 
 
         if(ratio < thetaSquared)
         {
-            double denominator =  (distanceSquared + epsilonSquared);
-            double factor = G / sqrt(denominator*denominator*denominator) * quadtree.nodes[nodeIndex].mass;
+            const double denominator =  (distanceSquared + epsilonSquared);
+            const double factor = G / sqrt(denominator*denominator*denominator) * quadtree.nodes[nodeIndex].mass;
 
-            double deltaAccelerationX = factor * displacementX;
-            double deltaAccelerationY = factor * displacementY;
+            const double deltaAccelerationX = factor * displacementX;
+            const double deltaAccelerationY = factor * displacementY;
 
             accelerationX[particleIndex] += deltaAccelerationX;
             accelerationY[particleIndex] += deltaAccelerationY;
@@ -197,7 +197,7 @@ void BarnesHut::calculateAcceleration(int nodeIndex, int particleIndex, Vec &pos
         }
         else 
         {
-            int childIndex = quadtree.nodes[nodeIndex].childFirstIndex;
+            const int childIndex = quadtree.nodes[nodeIndex].childFirstIndex;
             calculateAcceleration(childIndex, particleIndex, positionX, positionY, accelerationX, accelerationY, mass);
             calculateAcceleration(childIndex+1, particleIndex, positionX, positionY, accelerationX, accelerationY, mass);
             calculateAcceleration(childIndex+2, particleIndex, positionX, positionY, accelerationX, accelerationY, mass);

@@ -15,20 +15,20 @@ public:
     int numberOfParticles;
     std::vector<Node> nodes;
     
-    void buildTree(ParticlesState &particles, int centerScreenX, int centerScreenY);
-    void printData(ParticlesState &particles);
+    void buildTree(const ParticlesState &particles, int centerScreenX, int centerScreenY);
+    void printData(const ParticlesState &particles) const;
 
-    void calculateNodeCentresOfMass(int nodeIndex, ParticlesState &particles);
+    void calculateNodeCentresOfMass(int nodeIndex, const ParticlesState &particles);
     void resetTree();
-    bool empty(int nodeIndex); 
-    bool external(int nodeIndex); 
-    void insert(int nodeIndex, int particleIndex, ParticlesState &particles);
+    bool empty(int nodeIndex) const;
+    bool external(int nodeIndex) const;
+    void insert(int nodeIndex, int particleIndex, const ParticlesState &particles);
     void subdivide(int nodeIndex);
-    int assignQuadrant(int nodeIndex , double particleX, double particleY); 
-    bool checkInsideNodeQuadrant(int nodeIndex, double particleX, double particleY);
+    int assignQuadrant(int nodeIndex , double particleX, double particleY) const;
+    bool checkInsideNodeQuadrant(int nodeIndex, double particleX, double particleY) const;
 
 private:
 
-    int rootIndex = 0;
+    static constexpr int rootIndex = 0;
 };
 

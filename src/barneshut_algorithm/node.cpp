@@ -1,7 +1,7 @@
 #include "node.hpp"
 #include <iostream>
 
-void Node::PrintData()
+void Node::PrintData() const
 {
     std::cout << "Particle Index: " << particleIndex << '\n';
     std::cout << "First ChildNode Index: " << childFirstIndex << '\n';

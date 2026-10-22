@@ -10,10 +10,10 @@ QuadTree::QuadTree()
 }
 
 
-int QuadTree::assignQuadrant(int nodeIndex, double particleX, double particleY) //Needs fixing
+int QuadTree::assignQuadrant(int nodeIndex, double particleX, double particleY) const
 {
-    bool above = particleY < nodes[nodeIndex].squareCenterY;
-    bool right = particleX >= nodes[nodeIndex].squareCenterX;
+    const bool above = particleY < nodes[nodeIndex].squareCenterY;
+    const bool right = particleX >= nodes[nodeIndex].squareCenterX;
 
     if(above && !right)
         {return 0;}
@@ -25,18 +25,18 @@ int QuadTree::assignQuadrant(int nodeIndex, double particleX, double particleY) 
         {return 3;}
 }
 
-bool QuadTree::empty(int nodeIndex)
+bool QuadTree::empty(int nodeIndex) const
 {
     return (nodes[nodeIndex].particleIndex == -1);
 }
 
-bool QuadTree::external(int nodeIndex)
+bool QuadTree::external(int nodeIndex) const
 {
     return (nodes[nodeIndex].childFirstIndex == -1);
 }
 
 
-void QuadTree::buildTree(ParticlesState &particles, int centerScreenX, int centerScreenY)
+void QuadTree::buildTree(const ParticlesState &particles, int centerScreenX, int centerScreenY)
 {
     resetTree();
         
@@ -57,15 +57,15 @@ void QuadTree::buildTree(ParticlesState &particles, int centerScreenX, int cente
 
 void QuadTree::subdivide(int nodeIndex)
 {
-    int nextAvailableIndex = nodes.size(); //The final index
+    const int nextAvailableIndex = nodes.size(); //The final index
 
     nodes.resize(nodes.size() + 4);
     nodes[nodeIndex].childFirstIndex = nextAvailableIndex;
 
-    double parentSquareCenterX = nodes[nodeIndex].squareCenterX;
-    double parentSquareCenterY = nodes[nodeIndex].squareCenterY;
-    double parentHalfWidth = nodes[nodeIndex].halfWidth;
-    double childHalfWidth = parentHalfWidth * 0.5;
+    const double parentSquareCenterX = nodes[nodeIndex].squareCenterX;
+    const double parentSquareCenterY = nodes[nodeIndex].squareCenterY;
+    const double parentHalfWidth = nodes[nodeIndex].halfWidth;
+    const double childHalfWidth = parentHalfWidth * 0.5;
 
     //Initialise Children Nodes
     nodes[nextAvailableIndex].squareCenterX = parentSquareCenterX - childHalfWidth;
@@ -90,7 +90,7 @@ void QuadTree::resetTree()
     nodes.clear();
 }
 
-void QuadTree::insert(int nodeIndex, int particleIndex, ParticlesState &particles)
+void QuadTree::insert(int nodeIndex, int particleIndex, const ParticlesState &particles)
 {
 
     if(external(nodeIndex))
@@ -109,37 +109,37 @@ void QuadTree::insert(int nodeIndex, int particleIndex, ParticlesState &particle
                 return;
             }
             subdivide(nodeIndex);
-            int existingParticleIndex = nodes[nodeIndex].particleIndex;
+            const int existingParticleIndex = nodes[nodeIndex].particleIndex;
             nodes[nodeIndex].particleIndex = -1; //Make parent node empty again
-            int existingQuadrantNumber = assignQuadrant(nodeIndex, particles.X[existingParticleIndex], particles.Y[existingParticleIndex]);
-            int QuadrantNumber = assignQuadrant(nodeIndex, particles.X[particleIndex], particles.Y[particleIndex]);
+            const int existingQuadrantNumber = assignQuadrant(nodeIndex, particles.X[existingParticleIndex], particles.Y[existingParticleIndex]);
+            const int quadrantNumber = assignQuadrant(nodeIndex, particles.X[particleIndex], particles.Y[particleIndex]);
 
 
             insert(nodes[nodeIndex].childFirstIndex + existingQuadrantNumber, existingParticleIndex, particles);
-            insert(nodes[nodeIndex].childFirstIndex + QuadrantNumber, particleIndex, particles);
+            insert(nodes[nodeIndex].childFirstIndex + quadrantNumber, particleIndex, particles);
         }    
     }
     //Node internal
     else
     {
-        int quadrantNumber = assignQuadrant(nodeIndex, particles.X[particleIndex], particles.Y[particleIndex]);
+        const int quadrantNumber = assignQuadrant(nodeIndex, particles.X[particleIndex], particles.Y[particleIndex]);
         insert(nodes[nodeIndex].childFirstIndex + quadrantNumber, particleIndex, particles);
     }
 }
 
-bool QuadTree::checkInsideNodeQuadrant(int nodeIndex, double particleX, double particleY)
+bool QuadTree::checkInsideNodeQuadrant(int nodeIndex, double particleX, double particleY) const
 {
-    bool left = nodes[nodeIndex].squareCenterX - nodes[nodeIndex].halfWidth >= particleX;
-    bool right = nodes[nodeIndex].squareCenterX + nodes[nodeIndex].halfWidth < particleX;
-    bool above = nodes[nodeIndex].squareCenterY - nodes[nodeIndex].halfWidth >= particleY;
-    bool below = nodes[nodeIndex].squareCenterY + nodes[nodeIndex].halfWidth < particleY;
-    bool insideX =  !left && !right && !above && !below;
+    const bool left = nodes[nodeIndex].squareCenterX - nodes[nodeIndex].halfWidth >= particleX;
+    const bool right = nodes[nodeIndex].squareCenterX + nodes[nodeIndex].halfWidth < particleX;
+    const bool above = nodes[nodeIndex].squareCenterY - nodes[nodeIndex].halfWidth >= particleY;
+    const bool below = nodes[nodeIndex].squareCenterY + nodes[nodeIndex].halfWidth < particleY;
+    const bool insideX =  !left && !right && !above && !below;
 
     return insideX;
 }
 
 
-void QuadTree::calculateNodeCentresOfMass(int nodeIndex, ParticlesState &particles)
+void QuadTree::calculateNodeCentresOfMass(int nodeIndex, const ParticlesState &particles)
 {
     if(external(nodeIndex)) //Node External
     {
@@ -161,7 +161,7 @@ void QuadTree::calculateNodeCentresOfMass(int nodeIndex, ParticlesState &particl
     {
         //Recursive - call function for child nodes
 
-        int childIndex = nodes[nodeIndex].childFirstIndex;
+        const int childIndex = nodes[nodeIndex].childFirstIndex;
         calculateNodeCentresOfMass(childIndex, particles);
         calculateNodeCentresOfMass(childIndex+1, particles);
         calculateNodeCentresOfMass(childIndex+2, particles);
@@ -197,7 +197,7 @@ void QuadTree::calculateNodeCentresOfMass(int nodeIndex, ParticlesState &particl
 
 
 
-void QuadTree::printData(ParticlesState &particles) //Debug func
+void QuadTree::printData(const ParticlesState &particles) const //Function exists for debugging
 {
     std::cout << "Particles acceleration: " << '\n';
     for(int i = 0; i < numberOfParticles; i++)

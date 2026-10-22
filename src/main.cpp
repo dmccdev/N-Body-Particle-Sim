@@ -12,7 +12,7 @@ int main()
     int particleConfigSelectionValue;
     InitWindow(1200, 900, "particlesim2");
     SetTargetFPS(60);
-    double dt = 0.01;
+    const double dt = 0.01;
 
     std::unique_ptr<Pairwise> algorithm_pairwise = nullptr;
     std::unique_ptr<BarnesHut> algorithm_barneshut = nullptr;
@@ -22,7 +22,7 @@ int main()
     {
         BeginDrawing();
             ClearBackground(BLACK);
-            Vector2 mousePosition = GetMousePosition();
+            const Vector2 mousePosition = GetMousePosition();
             userinterface.UpdateButtons(mousePosition);
             if(userinterface.simulationStart)
             {

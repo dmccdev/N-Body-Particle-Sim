@@ -12,7 +12,7 @@ public:
     BarnesHut(int particlesCount, int integratorNumber, int particleConfigNumber, double dt);
 
     void InitialiseParticles();
-    void calculateAccelerations(Vec &positionX, Vec &positionY, Vec &accelerationX, Vec &accelerationY, Vec &mass);
+    void calculateAccelerations(const Vec &positionX, const Vec &positionY, Vec &accelerationX, Vec &accelerationY, const Vec &mass);
 
     Euler EulerIntegrator;
     Verlet VerletIntegrator;
@@ -24,20 +24,20 @@ public:
     
     void Update(bool statisticsEnabled);
 
-    void calculateAcceleration(int nodeIndex, int particleIndex, Vec &positionX, Vec &positionY, Vec &accelerationX, Vec &accelerationY, Vec &mass);
+    void calculateAcceleration(int nodeIndex, int particleIndex, const Vec &positionX, const Vec &positionY, Vec &accelerationX, Vec &accelerationY, const Vec &mass) const;
 
-    int particleCount;
-    int integratorNumber;
-    int particleConfigNumber;
+    const int particleCount;
+    const int integratorNumber;
+    const int particleConfigNumber;
     int frameCounter = 0;
 
-    double dt;
-    double G = 1.0;
+    const double dt;
+    static constexpr double G = 1.0;
 
-    double epsilon = 0.75;
-    double epsilonSquared = epsilon*epsilon;
+    static constexpr double epsilon = 0.5;
+    static constexpr double epsilonSquared = epsilon*epsilon;
 
-    double theta = 0.5;
-    double thetaSquared = theta*theta;
+    static constexpr double theta = 0.5;
+    static constexpr double thetaSquared = theta*theta;
 
 };

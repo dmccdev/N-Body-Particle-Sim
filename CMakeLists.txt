@@ -17,19 +17,16 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(raylib)
 
-# Eigen
+# Eigen (header-only)
 FetchContent_Declare(
     Eigen3
     GIT_REPOSITORY https://gitlab.com/libeigen/eigen.git
     GIT_TAG 3.4.0
     GIT_SHALLOW TRUE
+    SOURCE_SUBDIR cmake-not-used
 )
 
-FetchContent_GetProperties(Eigen3)
-
-if(NOT eigen3_POPULATED)
-    FetchContent_Populate(Eigen3)
-endif()
+FetchContent_MakeAvailable(Eigen3)
 
 add_library(Eigen3::Eigen INTERFACE IMPORTED GLOBAL)
 

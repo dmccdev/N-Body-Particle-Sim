@@ -13,7 +13,7 @@ particleConfigNumber(particleConfigNumber),
 particles(particlesCount),
 RK4Integrator(particlesCount),
 dt(dt),
-Stats(dt, 1.0, 300, epsilon)
+Stats(dt, 1.0, 300, 0.5)
 {
 }
 
@@ -124,10 +124,10 @@ void Pairwise::Update(bool statisticsEnabled)
 }
 
 
-void Pairwise::CalculateAccelerations(Vec &positionX, Vec &positionY, Vec &accelerationX, Vec &accelerationY, Vec &mass)
+void Pairwise::CalculateAccelerations(const Vec &positionX, const Vec &positionY, Vec &accelerationX, Vec &accelerationY, const Vec &mass) const
 
 {
-    int numberOfParticles = positionX.size();
+    const int numberOfParticles = positionX.size();
     accelerationX.setZero();
     accelerationY.setZero();
 
@@ -137,13 +137,13 @@ void Pairwise::CalculateAccelerations(Vec &positionX, Vec &positionY, Vec &accel
     {
         for(int j = i + 1; j < numberOfParticles; j++)
         {   
-            double displacementX = positionX[j] - positionX[i];
-            double displacementY = positionY[j] - positionY[i];
+            const double displacementX = positionX[j] - positionX[i];
+            const double displacementY = positionY[j] - positionY[i];
 
-            std::array<double, 2> deltaAccelerations = CalculateAcceleration(displacementX, displacementY);
+            const std::array<double, 2> deltaAccelerations = CalculateAcceleration(displacementX, displacementY);
 
-            double deltaAccelerationX = deltaAccelerations[0];
-            double deltaAccelerationY = deltaAccelerations[1];
+            const double deltaAccelerationX = deltaAccelerations[0];
+            const double deltaAccelerationY = deltaAccelerations[1];
 
             accelerationX[i] += mass[j] * deltaAccelerationX;
             accelerationY[i] += mass[j] * deltaAccelerationY;
@@ -154,14 +154,14 @@ void Pairwise::CalculateAccelerations(Vec &positionX, Vec &positionY, Vec &accel
     }
 }
 
-std::array<double, 2> Pairwise::CalculateAcceleration(double displacementX, double displacementY)
+std::array<double, 2> Pairwise::CalculateAcceleration(double displacementX, double displacementY) const
 
 {
-    double distanceSquared = displacementX*displacementX + displacementY*displacementY;
-    double denominator =  (distanceSquared + epsilonSquared);
-    double factor = G / std::sqrt(denominator*denominator*denominator);
-    double deltaAccelerationX = factor * displacementX;
-    double deltaAccelerationY = factor * displacementY;
+    const double distanceSquared = displacementX*displacementX + displacementY*displacementY;
+    const double denominator =  (distanceSquared + epsilonSquared);
+    const double factor = G / std::sqrt(denominator*denominator*denominator);
+    const double deltaAccelerationX = factor * displacementX;
+    const double deltaAccelerationY = factor * displacementY;
 
     return std::array<double, 2> {deltaAccelerationX, deltaAccelerationY};
 }

@@ -3,7 +3,7 @@
 #include <random>
 #include "Verlet.hpp"
 
-void Verlet::Initiate(ParticlesState &particles)
+void Verlet::Initiate(const ParticlesState &particles)
 
 {
     nextAccelerationX = particles.accelerationX;

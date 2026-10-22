@@ -17,5 +17,5 @@ public:
     double squareCenterX;
     double squareCenterY;
 
-    void PrintData();
+    void PrintData() const;
 };
