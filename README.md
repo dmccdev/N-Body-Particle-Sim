@@ -19,26 +19,26 @@
 
 ## Overview
 
-The simulation implements two different approaches to calculating gravitational forces, three numerical integration methods and several initial particle configurations, with plans to add more in the future.
+The simulation implements two different methods to calculating gravitational forces, three numerical integration methods and three initial particle configurations, with plans to add more in the future.
 
-This makes it possible to compare the computational cost (performance wise) and behaviour of different algorithms within the same simulation.
+This makes it possible to compare the computational cost (performance-wise) and behaviour of different algorithms within the same simulation conditions.
 
-The application also includes an interactive interface for switching between algorithms, integrators and particle configurations allowing combinations of different settings.
+The application also includes a user interface for switching between algorithms, integrators and particle configurations allowing combinations of different settings before starting the simulation.
 
 
 ---
 
 ## Features
 
-- Pairwise force calculation
-- Barnes Hut algorithm using a quadtree data structure
+- Pairwise (sometimes called Näive) force calculations
+- Barnes Hut algorithm using a quadtree data structure for force calculations
 - Euler, Verlet and RK4 integration
 - OpenMP parallelisation for improved performance
 - Multiple particle configurations (Galaxy, Single Star System and Binary Star System)
 - Particle visualisation using Raylib
 - Particle colouring depending on particle velocities
 - User Interface with ability to enable and disable statistics
-- CMake builds project into an exe file
+- CMake builds project into an .exe file 
 
 ---
 
@@ -46,7 +46,7 @@ The application also includes an interactive interface for switching between alg
 
 ## Galaxy
 
-A central massive body is surrounded by particles with tangential velocities, producing an orbiting galaxy with spiral arms.
+A central extremely high mass body is surrounded by lower mass particles with tangential velocities, producing an orbiting galaxy with spiral arms. Tangential velocities are assigned based on starting position to allow for an orbit around the central mass. Particles are also initially in a disk shape which allows for spiral arms to form and the simulation evolves.
 
 <p align="center">
   <img src="src/assets/Galaxy.png" width="650" alt="Galaxy particle configuration">
@@ -78,7 +78,7 @@ Particles closer to the centre have higher initial orbital velocities, producing
 
 # Gravitational Algorithms
 
-## Pairwise N-Body
+## Pairwise
 
 The direct approach calculates the gravitational interaction between particles individually.
 For N particles, this gives an approximate computational time complexity of O(N²).
@@ -93,7 +93,7 @@ The Barnes-Hut implementation uses a quadtree to divide the 2D simulation space 
 
 Rather than calculating the gravitational influence of every individual distant particle, groups of particles can be approximated using their combined mass and centre of mass.
 
-This approximation's tolerance can be adjusted by changing the theta value.
+This approximation's tolerance can be adjusted by changing the theta value. Future plans to enable the user to change the value before starting the simulation on the user interface.
 
 This reduces the algorithm time complexity from O(N²) to O(N log N) which is signinficantly better for high numbers of particles.
 
@@ -225,9 +225,6 @@ particlesim/
 │       ├── RK4.hpp
 │       └── RK4.cpp
 │
-├── third_party/
-│   └── Eigen/
-│
 ├── CMakeLists.txt
 └── README.md
 </pre>
@@ -243,9 +240,8 @@ particlesim/
 - Git
 - OpenMP
 
-Raylib is downloaded and configured automatically by CMake.
+Raylib and Eigen is downloaded and configured automatically by CMake.
 
-Eigen is included in the project's `third_party` directory.
 
 ## Clone
 
@@ -266,11 +262,11 @@ CMake will automatically download and configure Raylib.
 
 ### Windows
 
-For a Debug build:
+For a Debug build (not recommended - poor performance):
 
     build\Debug\particlesim.exe
 
-For a Release build: (Recomended)
+For a Release build: (recomended)
 
     build\Release\particlesim.exe
 
@@ -333,7 +329,7 @@ The interface provides controls for selecting:
 - Binary Star System
 - Single Star System
 
-The simulation can then be started using the start control.
+The simulation can then be started using the start button only after an appropriate selection has been made.
 
 ---
 
