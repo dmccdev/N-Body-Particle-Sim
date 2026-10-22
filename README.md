@@ -225,9 +225,6 @@ particlesim/
 │       ├── RK4.hpp
 │       └── RK4.cpp
 │
-├── third_party/
-│   └── Eigen/
-│
 ├── CMakeLists.txt
 └── README.md
 </pre>
@@ -243,9 +240,8 @@ particlesim/
 - Git
 - OpenMP
 
-Raylib is downloaded and configured automatically by CMake.
+Raylib and Eigen is downloaded and configured automatically by CMake.
 
-Eigen is included in the project's `third_party` directory.
 
 ## Clone
 
@@ -266,11 +262,11 @@ CMake will automatically download and configure Raylib.
 
 ### Windows
 
-For a Debug build:
+For a Debug build (not recommended - poor performance):
 
     build\Debug\particlesim.exe
 
-For a Release build: (Recomended)
+For a Release build: (recomended)
 
     build\Release\particlesim.exe
 
